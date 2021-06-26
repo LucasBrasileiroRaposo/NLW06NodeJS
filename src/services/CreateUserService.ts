@@ -1,15 +1,17 @@
 import { UsersRepository } from "../repositories/UsersRepository";
 import {getCustomRepository} from "typeorm";
+import { hash } from "bcryptjs";
 
 interface IUserRequest{
     name: string;
     email: string;
     admin?:boolean;
+    password: string;
 }
 
 class CreateUserService{
     
-    async execute ({ name,email,admin} : IUserRequest){
+    async execute ({ name, email, admin = false, password } : IUserRequest){
         
         const usersRepository = getCustomRepository(UsersRepository);
         // checa se o email esta correto
@@ -27,7 +29,8 @@ class CreateUserService{
 
         }
 
-        const userToBeSaved =  usersRepository.create({name,email,admin});
+        const passwordCriptografada = await hash(password,8);
+        const userToBeSaved =  usersRepository.create({name,email,admin,password: passwordCriptografada});
         await usersRepository.save(userToBeSaved);
 
         return userToBeSaved;

@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import express from "express";
-
+import "express-async-errors";
 import "./database";
+import express, { NextFunction, Request,Response } from "express";
 import { router } from "./routes";
 
 // @types/express
@@ -11,8 +11,18 @@ app.use(express.json());
 
 app.use(router);
 
-// http://localhost:3003
-app.listen(3003, () => console.log("Server is running"));
+app.use((erro: Error, request:Request, response:Response, next:NextFunction) => {
+
+  if(erro instanceof Error) {
+    return response.status(400).json({error: erro.message,});
+  }
+
+  return response.status(500).json({status: "error",message: "Internal Server Error,"});
+
+});
+
+// http://localhost:3001
+app.listen(3001, () => console.log("Server is running"));
 
 
 
