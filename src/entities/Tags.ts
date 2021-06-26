@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import {v4 as uuid} from "uuid" ;
+import { Expose } from "class-transformer"
 
 @Entity("tags")
 class Tags{
@@ -15,6 +16,7 @@ class Tags{
 
     @UpdateDateColumn()
     updated_at:Date;
+
 
     constructor(){
         if(!this.id){
